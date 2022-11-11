@@ -1,0 +1,13 @@
+version: '3'
+services:
+  app:
+    image: training.btech.id/simple-node-js/simple-node-js-diofathurr:latest
+    hostname: simple-node-js
+    container_name: simple-node-js
+    volumes:
+      - myapp:/home/node/simple-node-js
+    ports:
+      - "3000:3000"
+volumes:
+  myapp:
+    external: true

@@ -1,0 +1,39 @@
+stages:
+  - compile
+  - build
+  - deploy
+
+compile-express:
+  image: "training.btech.id/btacademy/node:8.10"
+  stage: compile
+  script:
+    - npm install
+  only:
+    - develop
+
+build-docker-image:
+  image: training.btech.id/btacademy/docker:latest
+  services:
+    - training.btech.id/btacademy/docker:dind
+  before_script: 
+    - docker login training.btech.id --username btacademy --password 'pyR$2YM#AB5V'
+  stage: build
+  environment: staging
+  variables:
+    CONTAINER_IMAGE: training.btech.id/simple-node-js/simple-node-js-diofathurr
+  script:
+    - 'ls'
+    - 'docker build -t $CONTAINER_IMAGE:latest .'
+    - 'docker push $CONTAINER_IMAGE:latest'   
+  only:
+    - develop
+
+build:
+  stage: deploy
+  before_script:
+    - 'docker-compose version'
+  script:
+    - 'docker-compose up -d'
+    - 'docker-compose ps'
+  only:
+    - develop
